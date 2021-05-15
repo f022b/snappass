@@ -194,7 +194,7 @@ def show_password(password_key):
 
 @check_redis_alive
 def main():
-    app.run(host='0.0.0.0')
+    app.run(host='127.0.0.1')
 
 
 if __name__ == '__main__':
