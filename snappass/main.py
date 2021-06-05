@@ -15,6 +15,8 @@ NO_SSL = bool(strtobool(os.environ.get('NO_SSL', 'False')))
 URL_PREFIX = os.environ.get('URL_PREFIX', None)
 TOKEN_SEPARATOR = '~'
 
+#URL_PREFIX = "senpass.mezal.ru"
+
 
 # Initialize Flask Application
 app = Flask(__name__)
@@ -166,7 +168,8 @@ def handle_password():
     if NO_SSL:
         base_url = request.url_root
     else:
-        base_url = request.url_root.replace("http://", "https://")
+        base_url = "https://sendpass.mezal.ru/"
+#        base_url = request.url_root.replace("http://", "https://")
     if URL_PREFIX:
         base_url = base_url + URL_PREFIX.strip("/") + "/"
     link = base_url + url_quote_plus(token)
