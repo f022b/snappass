@@ -164,7 +164,8 @@ def handle_password():
     token = set_password(password, ttl)
 
     if NO_SSL:
-        base_url = request.url_root
+   #     base_url = request.url_root
+         base_url = "sendpass.mezal.ru"
     else:
         base_url = request.url_root.replace("http://", "https://")
     if URL_PREFIX:
