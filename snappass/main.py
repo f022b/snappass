@@ -196,7 +196,7 @@ def show_password(password_key):
 def view_about():
     return render_template('about.html')
 @app.route('/agreement', methods=['GET','PUT'])
-def view_about():
+def view_agreement():
     return render_template('agreement.html')
 
 
