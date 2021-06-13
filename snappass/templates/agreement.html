@@ -1,22 +1,48 @@
 {% extends "base.html" %}
-
 {% block content %}
 
+<!doctype html>
+<html lang="ru">
+  <head>
+    <!-- Обязательные метатеги -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Sendpass.ru - использование</title>
+  </head>
+  <body>
 <div class="container">
   <section>
     <div class="page-header"><h1>Условия использования</h1></div>
-    <div class="col-sm-4">
-<p>Данный сервис предоставляется "как есть", предназначен для личного использования</p>
-<p>автор и администратор не несет ответственности за его работоспособность и не гарантирует постоянной работоспособности </p>
-<p>имейте резервную копию любых передаваемых данных, так как они не согхряняются на сервере и не могут быть восстановлены в случае технических сбоев</p>
-<p>Сервер собирает и обрабатывает стандартные логи - IP адрес и параметры браузера</p>
+    <div class="col-sm-10">
+<p>Данный сервис предоставляется "как есть", предназначен для личного использования.</p>
+<p>автор и администратор не несет ответственности за его работоспособность и не гарантирует постоянной работоспособности.</p>
+<p>имейте резервную копию любых передаваемых данных, так как они не сохраняются на сервере и не могут быть восстановлены в случае технических сбоев.</p>
+<p>Сервер собирает и обрабатывает стандартные логи - IP адрес и параметры браузера, так же собираются метрики Yandex.</p>
+<p>Все базовые и необходимые настройки безопасности сервера выполнены, но это не означает, что уязвимостей со 100% вероятностью нет.</p>
+<p> Сервис создан на базе https://github.com/pinterest/snappas и содержит минимальные изменения в основном связанные с русификацией.<p>
 </div>
-        <div class="col-sm-4">
-           <a  class="page-header" href="https://sendpass.mezal.ru">sendpass.ru</a>
-           <p><strong>Внимание, используя сервис, вы соглашаетесь с условиями его использования</strong></p>
-        </div>
+
+    <div class="col-sm-10">
+     <p> </p>
+     <p><strong>Внимание, используя сервис, вы соглашаетесь с условиями его использования</strong></p>
+     <p> </p>
+        <a class="btn btn-primary" href="https://sendpass.ru" role="button">Sendpass.ru</a>
+       
+    </div>
+     
   </section>
 </div>
+
+    <!-- Вариант 1: Bootstrap в связке с Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    
+  </body>
+</html>
+
 <!-- IE needs 512+ bytes: https://docs.microsoft.com/archive/blogs/ieinternals/friendly-http-error-pages -->
 {% endblock %}
 
