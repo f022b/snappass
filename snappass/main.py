@@ -167,7 +167,7 @@ def handle_password():
    #     base_url = request.url_root
          base_url = "http://sendpass.mezal.ru/"
     else:
-       base_url = "https://sendpass.mezal.ru/"
+       base_url = "https://sendpass.mezal.ru/receive/"
 #       base_url = request.url_root.replace("http://", "https://")
     if URL_PREFIX:
         base_url = base_url + URL_PREFIX.strip("/") + "/"
@@ -175,7 +175,7 @@ def handle_password():
     return render_template('confirm.html', password_link=link)
 
 
-@app.route('/<password_key>', methods=['GET'])
+@app.route('/receive/<password_key>', methods=['GET'])
 def preview_password(password_key):
     password_key = url_unquote_plus(password_key)
     if not password_exists(password_key):
@@ -184,7 +184,7 @@ def preview_password(password_key):
     return render_template('preview.html')
 
 
-@app.route('/<password_key>', methods=['POST'])
+@app.route('/receive/<password_key>', methods=['POST'])
 def show_password(password_key):
     password_key = url_unquote_plus(password_key)
     password = get_password(password_key)
