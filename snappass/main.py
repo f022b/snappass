@@ -165,9 +165,9 @@ def handle_password():
 
     if NO_SSL:
    #     base_url = request.url_root
-         base_url = "http://sendpass.mezal.ru/"
+         base_url = "http://sendpass.ru/"
     else:
-       base_url = "https://sendpass.mezal.ru/receive/"
+       base_url = "https://sendpass.ru/receive/"
 #       base_url = request.url_root.replace("http://", "https://")
     if URL_PREFIX:
         base_url = base_url + URL_PREFIX.strip("/") + "/"
