@@ -165,9 +165,10 @@ def handle_password():
 
     if NO_SSL:
    #     base_url = request.url_root
-         base_url = "sendpass.mezal.ru"
+         base_url = "http://sendpass.mezal.ru/"
     else:
-        base_url = request.url_root.replace("http://", "https://")
+       base_url = "https://sendpass.mezal.ru/"
+#       base_url = request.url_root.replace("http://", "https://")
     if URL_PREFIX:
         base_url = base_url + URL_PREFIX.strip("/") + "/"
     link = base_url + url_quote_plus(token)
@@ -179,7 +180,7 @@ def preview_password(password_key):
     password_key = url_unquote_plus(password_key)
     if not password_exists(password_key):
 #        abort(404)
-        return render_template('404.html')
+        return render_template('404.html'), 404
     return render_template('preview.html')
 
 
@@ -189,7 +190,7 @@ def show_password(password_key):
     password = get_password(password_key)
     if not password:
 #        abort(404)
-         return render_template('404.html')
+         return render_template('404.html'), 404
     return render_template('password.html', password=password)
 
 @app.route('/about', methods=['GET','PUT'])
