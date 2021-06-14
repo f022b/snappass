@@ -167,7 +167,7 @@ def handle_password():
    #     base_url = request.url_root
          base_url = "http://sendpass.ru/"
     else:
-       base_url = "https://sendpass.ru/receive/"
+       base_url = "https://sendpass.ru/"
 #       base_url = request.url_root.replace("http://", "https://")
     if URL_PREFIX:
         base_url = base_url + URL_PREFIX.strip("/") + "/"
