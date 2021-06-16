@@ -2,6 +2,10 @@ My update:
  add gooolge captcha
  add config.py for captcha keys
  added nginx config
+ One hour is default ttl
+ Added about page and agreement page
+ Change local bootstrap to web
+ Deleted old jquery-1* and replace to jquery-3.6.0
  
  
  
