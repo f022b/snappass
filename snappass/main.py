@@ -5,11 +5,24 @@ import uuid
 import redis
 
 from cryptography.fernet import Fernet
-from flask import abort, Flask, render_template, request
+from flask import abort, Flask, render_template, request, flash
 from redis.exceptions import ConnectionError
 from werkzeug.urls import url_quote_plus
 from werkzeug.urls import url_unquote_plus
 from distutils.util import strtobool
+import requests, json
+
+from flask_recaptcha import ReCaptcha
+
+#from flask_wtf import FlaskForm, RecaptchaField
+#from wtforms import TextField
+
+from config import  SP_SECRET_KEY, SP_STATIC_URL, SP_LOCAL_HOST, SP_SITE_KEY, SP_PRIVATE_KEY
+
+SECRET_KEY = SP_SECRET_KEY
+STATIC_URL = SP_STATIC_URL
+HOST = SP_LOCAL_HOST
+
 
 NO_SSL = bool(strtobool(os.environ.get('NO_SSL', 'False')))
 URL_PREFIX = os.environ.get('URL_PREFIX', None)
@@ -18,7 +31,25 @@ TOKEN_SEPARATOR = '~'
 
 # Initialize Flask Application
 app = Flask(__name__)
-if os.environ.get('DEBUG'):
+app.config.update({
+#    "debug": True,
+
+"RECAPTCHA_SITE_KEY": SP_SITE_KEY,
+    "RECAPTCHA_SITE_SECRET": SP_PRIVATE_KEY,
+    "RECAPTCHA_ENABLED": True
+})
+
+
+#recaptcha = ReCaptcha(site_key=SP_SITE_KEY, secret_key=SP_PRIVATE_KEY)
+recaptcha = ReCaptcha()
+recaptcha.init_app(app)
+
+#recaptcha.init_site_key(SP_SITE_KEY)
+
+#, RECAPTCHA_SECRET_KEY=SP_PRIVATE_KEY, RECAPTCHA_ENABLED = True)
+
+
+if  os.environ.get('DEBUG'):
     app.debug = True
 app.secret_key = os.environ.get('SECRET_KEY', 'Secret Key')
 app.config.update(
@@ -141,16 +172,21 @@ def clean_input():
     format data to be machine readable
     """
     if empty(request.form.get('password', '')):
-        abort(400)
+       # return render_template('400.html'), 400
+       abort(400)
 
     if empty(request.form.get('ttl', '')):
+       # return render_template('400.html'), 400
         abort(400)
 
     time_period = request.form['ttl'].lower()
     if time_period not in TIME_CONVERSION:
-        abort(400)
+        return render_template('400.html'), 400
 
     return TIME_CONVERSION[time_period], request.form['password']
+
+
+
 
 
 @app.route('/', methods=['GET'])
@@ -167,13 +203,40 @@ def handle_password():
    #     base_url = request.url_root
          base_url = "http://sendpass.ru/"
     else:
-       base_url = "https://sendpass.ru/"
+       base_url = STATIC_URL
 #       base_url = request.url_root.replace("http://", "https://")
     if URL_PREFIX:
         base_url = base_url + URL_PREFIX.strip("/") + "/"
     link = base_url + url_quote_plus(token)
-    return render_template('confirm.html', password_link=link)
 
+
+    r = requests.post('https://www.google.com/recaptcha/api/siteverify',
+                          data = {'secret' :
+                                  SP_PRIVATE_KEY,
+                                  'response' :
+                                  request.form['g-recaptcha-response']})
+
+    google_response = json.loads(r.text)
+    print('JSON: ', google_response)
+
+    if google_response['success']:
+        return render_template('confirm.html', password_link=link)
+
+    else:
+#        flash('Пожалуйста решите капчу')
+#        print(ttl, password)
+        return render_template('set_password.html', password = password)
+#         pass
+
+#    recaptcha = ReCaptcha()
+#    print(recaptcha.keys)
+#    if recaptcha.verify():
+       
+       # SUCCESS
+#     return render_template('confirm.html', password_link=link)
+#    else:
+#        # FAILED
+#        pass
 
 @app.route('/<password_key>', methods=['GET'])
 def preview_password(password_key):
@@ -204,7 +267,8 @@ def view_agreement():
 
 @check_redis_alive
 def main():
-    app.run(host='127.0.0.1')
+    app.run(host=HOST)
+
 
 
 if __name__ == '__main__':
