@@ -14,8 +14,6 @@ import requests, json
 
 from flask_recaptcha import ReCaptcha
 
-#from flask_wtf import FlaskForm, RecaptchaField
-#from wtforms import TextField
 
 from config import  SP_SECRET_KEY, SP_STATIC_URL, SP_LOCAL_HOST, SP_SITE_KEY, SP_PRIVATE_KEY
 
@@ -186,9 +184,6 @@ def clean_input():
     return TIME_CONVERSION[time_period], request.form['password']
 
 
-
-
-
 @app.route('/', methods=['GET'])
 def index():
     return render_template('set_password.html')
@@ -196,47 +191,34 @@ def index():
 
 @app.route('/', methods=['POST'])
 def handle_password():
-    ttl, password = clean_input()
-    token = set_password(password, ttl)
-
-    if NO_SSL:
-   #     base_url = request.url_root
-         base_url = "http://sendpass.ru/"
-    else:
-       base_url = STATIC_URL
-#       base_url = request.url_root.replace("http://", "https://")
-    if URL_PREFIX:
-        base_url = base_url + URL_PREFIX.strip("/") + "/"
-    link = base_url + url_quote_plus(token)
-
-
-    r = requests.post('https://www.google.com/recaptcha/api/siteverify',
+    try: 
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify',
                           data = {'secret' :
                                   SP_PRIVATE_KEY,
                                   'response' :
                                   request.form['g-recaptcha-response']})
-
-    google_response = json.loads(r.text)
-    print('JSON: ', google_response)
-
+        google_response = json.loads(r.text)
+        print('JSON: ', google_response)
+    except:
+        print("Error in captcha")
+        google_response = ['exception error']
     if google_response['success']:
-        return render_template('confirm.html', password_link=link)
-
+        ttl, password = clean_input()
+        token = set_password(password, ttl)
+        if NO_SSL:
+   #        base_url = request.url_root
+            base_url = "http://sendpass.ru/"
+        else:
+            base_url = STATIC_URL
+#            base_url = request.url_root.replace("http://", "https://")
+        if URL_PREFIX:
+            base_url = base_url + URL_PREFIX.strip("/") + "/"
+            link = base_url + url_quote_plus(token)
+            return render_template('confirm.html', password_link=link)
+        
     else:
-#        flash('Пожалуйста решите капчу')
-#        print(ttl, password)
         return render_template('set_password.html', password = password)
-#         pass
 
-#    recaptcha = ReCaptcha()
-#    print(recaptcha.keys)
-#    if recaptcha.verify():
-       
-       # SUCCESS
-#     return render_template('confirm.html', password_link=link)
-#    else:
-#        # FAILED
-#        pass
 
 @app.route('/<password_key>', methods=['GET'])
 def preview_password(password_key):
