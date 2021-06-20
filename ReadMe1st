@@ -1,5 +1,5 @@
 My update:
- add gooolge captcha
+ add google captcha
  add config.py for captcha keys
  added nginx config
  One hour is default ttl
